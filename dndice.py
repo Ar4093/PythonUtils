@@ -42,6 +42,7 @@ def randomDice(dice):
         # result += randint(1,facenum)
     
     # sort the rolls for further processing
+    
     rolls.sort()
     if 'l' in dice.lower():
         index = dice.lower().find('l') + 1
@@ -51,7 +52,8 @@ def randomDice(dice):
         if number > dicenum:
             return 0
         
-        for i in range(number+1,len(rolls)):
+        
+        for i in range(number,len(rolls)):
             result += rolls[i]
     elif 'h' in dice.lower():
         index = dice.lower().find('h') + 1
@@ -60,7 +62,7 @@ def randomDice(dice):
         # Can't keep more dice than available, keeping all of them
         if number > dicenum:
             number = dicenum
-        for i in range(len(rolls)-number-1,len(rolls)):
+        for i in range(len(rolls)-number,len(rolls)):
             result += rolls[i]
     elif 'k' in dice.lower():
         index = dice.lower().find('k') + 1
@@ -69,7 +71,10 @@ def randomDice(dice):
         # Can't keep more dice than available, keeping all of them
         if number > dicenum:
             number = dicenum
-        for i in range(len(rolls)-number-1,len(rolls)):
+        for i in range(len(rolls)-number,len(rolls)):
+            result += rolls[i]
+    else:
+        for i in range(len(rolls)):
             result += rolls[i]
     # Any modifiers present? 
     if not m.group(3) == None:
@@ -99,7 +104,7 @@ def randomDice(dice):
 # Returns: The total of all rolls as integer, None if there was no valid dice notation found
 def dnDice(dice):
     # Pattern
-    diceexp1 = re.compile('(\d*d\d+)(([\+\-\*x\/]\d+(?!d))+)?', re.IGNORECASE)
+    diceexp1 = re.compile('(\d*d\d+)(([\+\-\*x\/HLK]\d+(?!d))+)?', re.IGNORECASE)
     # Total roll
     total = 0
     
