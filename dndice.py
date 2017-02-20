@@ -11,6 +11,23 @@ import re
 # warning: doesn't respect order of operations. So +5*3 will first add 5, then multiply by 3.
 # example: 4d6+3 rolls 4 dice with 6 faces each, afterwards adds 3.
 
+HELP = '''Usage: (`<arg>`: required, `[arg]`: optional, `arg1|arg2`: either arg1 or arg2):
+`\\*sidedroll <expr1>[+<expr2>[+<expr3>[...]]]`
+with `expr1`, `expr2` etc. being of the following format 
+```[N]d<F>[<L|H|K><n>][<Y1>[<Y2>[...]]]```
+with:
+`N` - number of dice to be rolled (if omitted, assumed to be 1)
+`F` - number of faces of each dice
+`Ln`|`Hn`|`Kn`: discard the **L**owest *n* dice or **K**eep the **H**ighest *n* dice
+`Y1`, `Y2` etc. - operations to apply to this roll, supported: + - \\* x / (add, subtract, multiply, multiply, divide) followed by a number.
+These are parsed in order (no proper order of operations)
+
+Examples:
+`d6+3` - rolls one dice with 6 sides and adds 3 to the roll
+`4d20\\*5+4` - rolls 4 20-sided dice, multiplies the result by 5 and adds 4
+`2d6+3d10` - rolls 2 6-sided and 3 10-sided dice
+`5d6k3` - rolls 5 6-sided dice and only keeps the 3 highest. Equivalent to `5d6l2` and `5d6h3`'''
+
 # Parse a single dice roll
 def randomDice(dice):
     # Format for the whole roll
@@ -103,6 +120,10 @@ def randomDice(dice):
 #
 # Returns: The total of all rolls as integer, None if there was no valid dice notation found
 def dnDice(dice):
+    # Help requested?
+    if dice.lower() == "help" or '?' in dice:
+        return HELP
+    
     # Pattern
     diceexp1 = re.compile('(\d*d\d+)(([\+\-\*x\/HLK]\d+(?!d))+)?', re.IGNORECASE)
     # Total roll
@@ -111,7 +132,7 @@ def dnDice(dice):
     results = diceexp1.findall(dice)
     
     if len(results) == 0:
-        return None
+        return "There has been an error parsing the notation. Pass help as argument to see the usage."
     else:
         # Total up the rolls
         for d in results:
@@ -121,4 +142,4 @@ def dnDice(dice):
                 string += part
             
             total += randomDice(string)
-        return total
+        return str(total)
