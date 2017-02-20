@@ -142,4 +142,4 @@ def dnDice(dice):
                 string += part
             
             total += randomDice(string)
-        return str(total)
+        return ":game_die: "+str(total)+" :game_die:
