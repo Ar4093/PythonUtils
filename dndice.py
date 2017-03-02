@@ -10,13 +10,13 @@ import re
 # Y1,Y2,... - operand
 # warning: doesn't respect order of operations. So +5*3 will first add 5, then multiply by 3.
 # example: 4d6+3 rolls 4 dice with 6 faces each, afterwards adds 3.
-# Thanks to tara, maximum number of allowed dice/faces is 999999.
+# Thanks to tara, maximum number of allowed dice/faces is 99999.
 
 # Parse a single dice roll
 def randomDice(dice):
     try:
         # Format for the whole roll
-        diceexp = re.compile('(?:\D+)?(\d{0,6})d(\d{1,6})((([\+\-\*x\/LH])(\d+))+)?',re.IGNORECASE)
+        diceexp = re.compile('(?:\D+)?(\d{0,5})d(\d{1,5})((([\+\-\*x\/LH])(\d+))+)?',re.IGNORECASE)
         # Format for modifiers
         addsexp = re.compile('[\+\-\*x\/LH]\d+',re.IGNORECASE)
         numexp = re.compile('(\d+)')
@@ -107,7 +107,7 @@ def randomDice(dice):
 # Returns: The total of all rolls as integer, None if there was no valid dice notation found
 def dnDice(dice):
     # Pattern
-    diceexp1 = re.compile('(\d*d\d+)(([\+\-\*x\/HLK]\d+(?!d))+)?', re.IGNORECASE)
+    diceexp1 = re.compile('(\d{0,5}d\d{1,5})(([\+\-\*x\/HLK]\d+(?!d))+)?', re.IGNORECASE)
     # Total roll
     total = 0
     
